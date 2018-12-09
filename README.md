@@ -1,140 +1,260 @@
-# Gap : NLP/CV Data Engineering Framework
+# Gap CV
 
-## Natural Language Processing for PDF, TIFF, and Camera Captured Documents, and
-## Computer Vision Processing for Images
+<p align="center">
+  <img width="345" height="200" src='docs/img/gap.jpg'>
+</p>
 
-### Framework
+## Intro
 
-The Gap NLP/CV data engineering framework provides an easy to get started into the world of machine learning for your unstructured data in PDF documents, scanned documents, TIFF facsimiles and camera captured documents, and your image data in image files and image repositories.
+**Gap** is a data engineering framework for machine learning. The **GapCV** is a component of **Gap** for computer vision (CV). The component manages data preparation of images, feeding and serving neural network models, and data management of persistent storage.
 
-*CV , v0.9.4 (Pre-launch: beta)*
+The module is written in a modern *object oriented programming (OOP)* abstraction with an *imperative programming* style that fits seamlessly into ML frameworks which are moving into imperative programming, such as **Keras** and **PyTorch**. The bottom layers of the module are written in a *bare metal* style for high performance.
 
-  - Automatic storage and retrieval with high performance HDF5 files.
-  - Automatic handling of mixed channels (grayscale, RGB and RGBA) and pixel size.
-  - Programmatic control of resizing.
-  - Programmatic control of conversion into machine learning ready data format: decompression, normalize, flatten.
-  - Programmatic control of minibatch generation.
-  - Programmatic control of image augmentation.
-  - Asynchronous processing of images.
-  - Automatic generation of CV machine learning ready data.
+**Gap** was inspired by a meeting of data scientists and machine learning enthusiasts in Portland, OR in May 2018. The first version of **Gap** was available during the summer and the local software community was engaged through meetups, chats, Kaggle groups, and a conference at the Oxford Suites. During the Fall, a decision was made to refactor **Gap** into an industrial grade application, spearheaded by Gap's lead, David Molina, and overseen and assisted by Andrew Ferlitsch, Google AI. 
 
-The framework consists of a sequence of Python modules which can be retrofitted into a variety of configurations. The framework is designed to fit seamlessly and scale with an accompanying infrastructure. To achieve this, the design incorporates:
+## Why and Why Now
 
-  - Problem and Modular Decomposition utilizing Object Oriented Programming Principles.
-  - Isolation of Operations and Parallel Execution utilizing Functional Programming Principles.
-  - High Performance utilizing Performance Optimized Python Structures and Libraries.
-  - High Reliability and Accuracy using Test Driven Development Methodology.
+During the Spring of 2018, many of us had observed advancements in redesign of ML frameworks (such as Keras and PyTorch) to migrate into frameworks which would have broader adoption in the software engineering community. But, the focus was primarily on the model building and not on the data engineering. Across the Internet, between blogs, tutorials and online classes, the examples for data engineering was still a wild west. To us, we saw this as a gap, and hence the name Gap
 
-## Audience
+ML practitioners today recognize the substantial component that data engineering is within the machine learning ecosystem, and the need to modernize, streamline and standardize to meet the needs of the software development community at the same pace as framework advancements are being made on the modeling components.
 
-This framework is ideal for any organization planning to do:
+  ![MLEcoSystem](docs/img/MLEcoSystem.png)
 
-  * Data extraction from their repository of documents into an RDBMS system for CART analysis, linear/logistic regressions,            
-    or generating word vectors for natural language deep learning (DeepNLP).
-  * Generating machine learning ready datan from their repository of images for computer vision.
+## Summary of Features
 
-## License
+### Image Types
 
-The source code is made available under the Apache 2.0 license: [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+The following image formats are supported: 
 
-## Prerequites
+    * JPEG and JPEG2000
+    * PNG
+    * TIF
+    * GIF
+    * BMP
+    * 8 and 16 bits per pixel
+    * Grayscale (single channel), RGB (three channels) and RGBA (four channels)
+    
+### Image Set (Dataset) Layouts
 
-The Gap framework extensively uses a number of open source applications/modules. The following applications and modules will be downloaded onto your computer/laptop when the package **OR** setup file is installed.
+The following image set layouts are supported (i.e., can be ingested by Gap):  
 
-  1. Artifex's Ghostscript - extracting text from text PDF
-  2. ImageMagic's Magick - extracting image from scanned PDF
-  3. Google's Tesseract - OCR of scanned/image captured text
-  4. NLTK (Natural Language Toolkit) - stemming/lemmatizer/parts of speech annotation
-  5. unidecode - romanization of latin character codes
-  6. numpy - high performance in-memory arrays (tensors)
-  7. HDF5 - high performance of on-disk data (tensors) access
-  8. openCV - image manipulation and processing for computer vision
-  9. imutils - image manipulation for computer vision
-  
+    * On-Disk (directory, CSV and JSON)
+    * In-Memory (list, numpy)
+    * Remote (http)
+    
+For CSV and JSON, the image data can be embedded (in-memory), local (on-disk) or url paths (remote).
+
+### Image Transformations
+
+The following image transformations are supported: 
+
+    * Color -> Gray
+    * Resizing
+    * Flattening
+    * Normalization and Standardization
+    * Data Type Conversion: 8 and 16 bpp integer and 16, 32 and 64 bpp float
+    
+Transformations can be performed when processing an image set (ingestion) or performed dynamically when feed during training.
+
+### Image Augmentation
+
+The following image augmentations are supported.
+
+    * Rotation
+    * Horizontal and Vertical Flip
+    * Zoom
+    * Brightening
+    * Sharpening
+    
+Image augmentation can be performed dynamically in-place during feeding (training) of a neural network.
+
+### Image Feeding
+
+The following image feeding mechanisms are supported:
+
+    * Splitting 
+    * Shuffling
+    * Iterative
+    * Generative
+    * Mini-batch
+    * Stratification
+    * One-Hot Label Encoding
+
+When feeding, shuffling is handled using indirect indexing, maintaining the location of data in the heap. One-hot encoding of labels is performed
+dynamically when the feeder is instantiated.
+
+### In-Memory Management
+
+The following are supported for in-memory management:
+
+    * Contiguous Memory (Numpy)
+    * Streaming
+    * Indirect Indexing (Shuffling w/o moving memory)
+    * Data Type Reduction
+    * Collection Merging
+    * Asynchronous and Concurrent Processing
+    
+Collections of image data, which are otherwise disjoint, can be merged efficiently and with label one-hot encoding performed dynamically for feeding neural networks from otherwise disparate sources.
+
+### Persistent Storage Management
+
+The following are supported for on-disk management:
+
+    * HDF5 Storage and Indexing
+    * Metadata handling
+    * Distributed
+
 ## Pip Installation: 
 
-The Gap framework is supported on Windows, MacOS, and Linux. It has been packaged for distribution via PyPi on launch.
+The **GapCV** framework is supported on Windows, MacOS, and Linux. It has been packaged for distribution via PyPi on launch.
 
-  1. install [miniconda](https://conda.io/miniconda.html)
+  1. install [miniconda](https://conda.io/miniconda.html)  
 
-  2. (optional)  
-      + Create an environment with: `conda create -n gap python==3.6 jupyter`  
-      + Activate: `source activate gap`
-      + Deactivate: `source deactivate`
-
-  3. install GapML:  
+  2. install conda virtual environment and required packages  
+      + Create an environment with: `conda create -n gap python==3.5 jupyter pip`  
+      + Activate: `source activate gap`  
       + `pip install gapcv`
+
+  3. exiting conda virtual environment:  
+      + Windows: `deactivate`  
+      + Linux/macOS: `source deactivate`
 
 ## Setup.py Installation:
 
-To install GapML via setup.py:
+To install **GapCV** via setup.py:
 
   1. clone from the Github repo.  
       + `git clone https://github.com/gapml/CV.git`
 
-  2. install the GapML setup file. 
+  2. install the GapML setup file.  
+      + access folder `cd CV`  
       + `python setup.py install`
 
-## Modules
+## Quick Start
 
-The framework provides the following pipeline of modules to support your data and knowledge extraction from both digital and scanned PDF documents, TIFF facsimiles and image captured documents.
+Image preparation, neural network feeding and management of image datasets is handled through the class object `Images`. We will provide here a brief discussion on the
+various ways of using the `Images` class.
 
-#### <span style='color: saddlebrown'>VISION</span>
+The initializer has no required (positional) parameters. All the parameters are optional (keyword) parameters. The most frequently used parameters are:
 
-The splitter module is the CV entry point into the pipeline. It consists of a Images and Image class. The Images class handles the storage and (random access) batch retrieval of CV machine learning ready data, using open source openCV image processing, numpy high performance arrays (tensors) and HDF5 high performance disk (tensor) access. The Image class handles preprocessing of individual images into CV machine learning ready data. The batch and image preprocessing can be done synchronously or asynchronously, where in the latter case an event handler signals when the preprocessing of an image or batch has been completed and the machine learning ready data is accessible.
+        Images( name, dataset, labels, config ) 
+        
+            name   : the name of the dataset (e.g., 'cats_n_dogs')
+            dataset: the dataset of images
+            labels : the labels
+            config : configuration settings
 
-The vision module handles:
+### Preparing Datasets
 
-  - Mixed image size, format, resolution, number of channels
-  - Decompression, Resizing, Normalizing, Flattening
+The first step is to transform the images in an image dataset into machine learning ready data. How the images are transformed is dependent on the image source and the configuration settings. By default, all images are transformed to:
 
-[Specification](specs/vision_spec.docx)
+        1. RGB image format
+        2. Resized to (128, 128)
+        3. Float32 pixel data type
+        4. Normalization
+        
+In this quick start section, we will briefly cover preparing datasets that are on-disk, remotely stored and in-memory.
+ 
+*Directory*
 
-## User's Guide
+A common format for image datasets is to stored them on disk in a directory layout. The layout consists of a root (parent) directory and one or more subdirectories. Each subdirectory is a
+class (label), such as *cats*. Within the subdirectory are one or more images which belong to that class. Below is an example:
 
-The User's (Programming) Quick Start Guide can be found [here](specs/quick%20start%20guide.docx)
+                    cats_n_dogs
+                  /             \  
+                cats            dogs
+                /                  \
+            c1.jpg ...          d1.jpg ...
+            
+The following instantiation of the `Images` class object will load the images from local disk into in-memory according the default transformation settings.  Within memory, the set of transformed images will be grouped into two classes: cats, and dogs.      
 
-## Releases
+```python
+images = Images(dataset='cats_n_dogs')
+```
 
+Once loaded, you can get information on the transformed data as properties of the `Images` class. Below are a few frequently used properties.
+
+```python
+print(images.name)      # will output the name of the dataset: cats_and_dogs
+print(images.count)     # will output the total number of images in both cats and dogs
+print(images.classes)   # will output the class to label mapping: { 'cats': 0, 'dogs': 1 }
+print(images.images[0]) # will output the numpy arrays for each transformed image in the class with label 0 (cats).
+print(images.labels[0]) # will output the label for each transformed image in the class with label 0 (cats).
+```
+
+Several of the builtin functions have been overridden for the `Images` class. Below are a few frequently used overriden builtin functions:
+
+```python
+print(len(images))      # same as images.count
+print(images[0])        # same as images.images[0]
+```
+
+*List*
+
+Alternatively, local on-disk images maybe specified as a list of paths, with corresponding list of labels. Below is an example where the `dataset` parameter is specified as a list of
+paths to images, and the `labels` parameter is a list of corresponding labels.
+
+```python
+images = Images(name='cats_and_dogs', dataset=['cats/1.jpg', 'cats/2.jpg', ... 'dogs/1.jpg'], labels=[0, 0, ... 1])
+```
+
+Alternately, the image paths maybe specified as remote locations using URL paths. In this case, a HTTP request will be made to fetch the contents of the image from the remote site.
+
+```python
+images = Images(name='cats_and_dogs', dataset=['http://mysite.com/cats/1.jpg', 'http://mysite.com/cats/2.jpg', ... ], labels=[0, 0, ...])
+```
+
+*Memory*
+
+If the dataset is already in memory, for example a curated dataset that is part of a framework (e.g., CIFAR-10 in Keras), the in-memory multi-dimensional numpy arrays for the curated images and labels are passed as the values to the `dataset` and `labels` parameter.
+
+```python
+from keras.datasets import cifar10
+
+(x_train, y_train), (x_test, y_test) = cifar10.load_data()
+
+train = Images('cifar10', dataset=x_train, labels=y_train)
+test  = Images('cifar10', dataset=x_test,  labels=y_test)
+```
+
+*CSV*
+
+A dataset can be specified as a CSV (comma separated values) file. Both US (comma) and EU (semi-colon) standard for separators are supported. Each row in the CSV file corresponds to an image
+and corresponding label. The image may be local on-disk, remote or embedded. Below are some example CSV layouts:
+
+        *local on-disk*
+            label,image
+            'cat','cats/c1.jpg'
+            'dog','dogs/d1.jpg'
+            ...
+            
+        *remote*
+            label,image
+            'cat','http://mysite.com/c1.jpg'
+            'dog','http://mysite.com/d1.jpg'
+            ...
+            
+        *embedded pixel data*
+            label,name
+            'cat','[ embedded pixel data ]'
+            'dog','[ embedded pixel data ]'
+            
+For CSV, the `config` parameter is specified when instantiating the `Images` class object, to set the settings for:
+
+        header      # if present, CSV file has a header; otherwise it does not.
+        image_col   # the column index (starting at 0) of the image field.
+        label_col   # the column index (starting at 0) of the label field.
+        
+```python
+images = Images(dataset='cats_n_dogs.csv', config=['header', 'image_col=0', 'label_col=1'])
+```
+
+*JSON*
+
+### Feeding Datasets
+
+### Managing Datasets (Persistent Storage)
+
+## Reference
 
 ## Testing
-
-The GAP framework is developed using Test Driven Development methodology. The automated unit tests for the framework use pytest, which is a xUnit style form of testing (e.g., jUnit, nUnit, jsUnit, etc).
-
-#### Installation and Documentation
-
-The pytest application can be installed using pip:
-
-    pip install pytest
-
-Online documentation for [pytest](https://docs.pytest.org)
-
-#### Execution
-
-The following are the pre-built automated unit tests, which are located under the subdirectory tests:
-
-    image_test.py       # Tests the Image and Images Class in the Vision Module
-
-The automated tests are executed as follows:
-
-  1. From directory root enter `cd tests`
-
-  2. To run tests with coverage: 
-
-    pytest -v image_test.py
-
-#### Code Coverage
-
-Information on the percent of code that is covered (and what source lines not covered) by the automated tests is obtained using pytest-cov. This version of pytest is installed using pip:
-
-    pip install pytest-cov
-
-  1. From directory root enter `cd tests`
-
-  2. To run tests with coverage:
-
-Testing with code coverage is executed as follows:
-
-    pytest --cov=gampml.vision image_test.py
-
-        Statements=652, Missed=56, Percent Covered: 91%
